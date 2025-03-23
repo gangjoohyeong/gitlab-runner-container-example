@@ -17,8 +17,7 @@ build-docker-image:
     - IMAGE_TAG=$CI_REGISTRY_IMAGE:$VERSION
     - IMAGE_TAG_LATEST=$CI_REGISTRY_IMAGE:latest
     - BUILD_DATE=$(date +'%Y-%m-%d %H:%M:%S')
-    - |
-      echo "GIT_COMMIT_HASH='$CI_COMMIT_SHORT_SHA'" >> .env.*
+    - echo "GIT_COMMIT_HASH='$CI_COMMIT_SHORT_SHA'" >> .env.*
   script:
     - echo "$CI_JOB_TOKEN" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
     - docker build -t $IMAGE_TAG -t $IMAGE_TAG_LATEST .
