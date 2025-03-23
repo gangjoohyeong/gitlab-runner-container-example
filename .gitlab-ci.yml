@@ -20,7 +20,7 @@ build-docker-image:
     - |
       echo "GIT_COMMIT_HASH='$CI_COMMIT_SHORT_SHA'" >> .env.*
   script:
-    - echo "$CI_DEPLOY_PASSWORD" | docker login $CI_REGISTRY -u $CI_DEPLOY_USER --password-stdin
+    - echo "$CI_JOB_TOKEN" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
     - docker build -t $IMAGE_TAG -t $IMAGE_TAG_LATEST .
     - docker push $IMAGE_TAG
     - docker push $IMAGE_TAG_LATEST
