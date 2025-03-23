@@ -1,5 +1,6 @@
 stages:
   - build
+  - deploy
 
 variables:
   MAJOR: 'test'
@@ -23,6 +24,24 @@ build-docker-image:
     - docker build -t $IMAGE_TAG -t $IMAGE_TAG_LATEST .
     - docker push $IMAGE_TAG
     - docker push $IMAGE_TAG_LATEST
+  only:
+    - main
+    - cicd
+
+deploy-to-server:
+  stage: deploy
+  image: docker:28.0.1
+  tags:
+    - runner-docker
+  variables:
+    DOCKER_HOST: "unix:///var/run/docker.sock" # GitLab Runner 컨테이너 내부에 마운트한 호스트 머신의 Docker 소켓을 사용
+  before_script:
+    - echo "$CI_JOB_TOKEN" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
+  script:
+    - docker pull $CI_REGISTRY_IMAGE:latest
+    - docker stop project-container || true
+    - docker rm project-container || true
+    - docker run -d --name project-container -p 9999:9999 --restart always $CI_REGISTRY_IMAGE:latest
   only:
     - main
     - cicd
