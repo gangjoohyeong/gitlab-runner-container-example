@@ -2,6 +2,13 @@
 
 GitLab Runner를 컨테이너로 실행한 예시
 
+```
+Host System
+├── Docker Daemon
+    ├── GitLab Runner Container
+    └── CI Job Container (직접 호스트의 Docker daemon 사용)
+```
+
 ## Build
 - Push
 - Docker 이미지 빌드
